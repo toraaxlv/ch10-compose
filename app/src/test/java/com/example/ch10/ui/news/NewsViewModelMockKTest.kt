@@ -1,21 +1,27 @@
 package com.example.ch10.ui.news
 
 import com.example.ch10.data.NewsRepository
+import com.example.ch10.data.model.NewsCategory
+import com.example.ch10.data.model.NewsFeed
 import com.example.ch10.testutil.MainDispatcherRule
+import com.example.ch10.testutil.article
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.fail
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.io.IOException
 
 // Tugas 3: uji NewsViewModel dengan MockK (bukan FakeNewsRepository).
-//  - coEvery { repository.getTopHeadlines(any()) } returns Result.success(...)
-//  - buat ViewModel: NewsViewModel(repository) -> init langsung memuat headline
-//  - runCurrent() agar coroutine di viewModelScope selesai
-//  - periksa viewModel.uiState.value, dan coVerify { ... } untuk jumlah panggilan
-// Helper article(id) ada di testutil/TestData.kt. Hilt TIDAK diperlukan di sini.
+// Hilt TIDAK diperlukan di sini: cukup NewsViewModel(repository).
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewsViewModelMockKTest {
 
@@ -27,16 +33,30 @@ class NewsViewModelMockKTest {
         repository = mockk()
     }
 
-    // TODO [T3.1] Skenario sukses: repository mengembalikan 2 artikel ->
-    //  isLoading false, articles.size == 2, errorMessage null,
-    //  dan getTopHeadlines(NewsCategory.General) dipanggil tepat 1 kali.
+    // T3.1 Skenario sukses: repository mengembalikan 2 artikel.
     @Test fun `sukses - headline mengisi daftar artikel`() = runTest {
-        fail("Belum dikerjakan: T3.1")
+        coEvery { repository.getTopHeadlines(any()) } returns
+            Result.success(NewsFeed(listOf(article(1), article(2))))
+
+        val viewModel = NewsViewModel(repository)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertEquals(2, state.articles.size)
+        assertNull(state.errorMessage)
+        coVerify(exactly = 1) { repository.getTopHeadlines(NewsCategory.General) }
     }
 
-    // TODO [T3.2] Skenario gagal: repository mengembalikan Result.failure(IOException()) ->
-    //  articles kosong dan errorMessage == "Tidak ada koneksi internet."
+    // T3.2 Skenario gagal: Result.failure(IOException()).
     @Test fun `gagal - pesan error tampil dan daftar kosong`() = runTest {
-        fail("Belum dikerjakan: T3.2")
+        coEvery { repository.getTopHeadlines(any()) } returns Result.failure(IOException())
+
+        val viewModel = NewsViewModel(repository)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state.articles.isEmpty())
+        assertEquals("Tidak ada koneksi internet.", state.errorMessage)
     }
 }
