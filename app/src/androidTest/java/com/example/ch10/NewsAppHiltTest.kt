@@ -22,11 +22,8 @@ import javax.inject.Inject
 //
 // File ini TIDAK perlu diubah. Ketiga tes baru hijau setelah:
 //  - Tugas 1 selesai (MainActivity @AndroidEntryPoint, ViewModel @HiltViewModel), dan
-// TODO [T4.1] buat di/FakeRepositoryModule.kt di folder androidTest:
-//  @Module + @TestInstallIn(components = [SingletonComponent::class],
-//  replaces = [RepositoryModule::class]) yang mem-@Binds FakeNewsRepository
-//  sebagai NewsRepository. Tanpa module itu, aplikasi memakai repository asli
-//  (internet + API key) dan tes gagal.
+//  - T4.1 selesai: di/FakeRepositoryModule.kt (androidTest) mem-@Binds
+//  FakeNewsRepository sebagai NewsRepository lewat @TestInstallIn.
 @HiltAndroidTest
 class NewsAppHiltTest {
 
