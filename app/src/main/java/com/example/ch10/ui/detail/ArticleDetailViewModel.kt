@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.ch10.ARG_ARTICLE_URL
 import com.example.ch10.data.NewsRepository
 import com.example.ch10.data.model.Article
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class ArticleDetailUiState(
     val isLoading: Boolean = true,
@@ -24,8 +26,8 @@ data class ArticleDetailUiState(
 // articleUrl dibaca dari SavedStateHandle: Navigation otomatis memasukkan
 // argumen route ke sana. Hilt juga meng-inject SavedStateHandle ke setiap
 // @HiltViewModel, jadi constructor ini tidak perlu diubah.
-// TODO [T1.6] Tandai dengan @HiltViewModel dan tambahkan @Inject constructor.
-class ArticleDetailViewModel(
+@HiltViewModel
+class ArticleDetailViewModel @Inject constructor(
     private val repository: NewsRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {

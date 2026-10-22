@@ -10,8 +10,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-// Fungsi pembuat Retrofit/OkHttp. Dipanggil DefaultAppContainer (dan nanti
-// di/NetworkModule, T1.3); pengujian memanggilnya dengan MockWebServer.
+// Fungsi pembuat Retrofit/OkHttp. Dipanggil di/NetworkModule (T1.3);
+// pengujian memanggilnya dengan MockWebServer.
 
 const val API_KEY_HEADER = "X-Api-Key"
 const val NEWS_BASE_URL = "https://newsapi.org/"

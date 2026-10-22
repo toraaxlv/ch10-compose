@@ -7,6 +7,7 @@ import com.example.ch10.data.model.Article
 import com.example.ch10.data.model.NewsCategory
 import com.example.ch10.data.model.OfflineInfo
 import com.example.ch10.data.toUserMessage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // Jeda sebelum mencari: NewsAPI gratis dibatasi 100 request/hari,
 // jadi JANGAN memanggil API untuk setiap huruf yang diketik.
@@ -34,8 +36,8 @@ data class NewsUiState(
     val isSearching: Boolean get() = query.isNotBlank()
 }
 
-// TODO [T1.6] Tandai dengan @HiltViewModel dan tambahkan @Inject constructor.
-class NewsViewModel(
+@HiltViewModel
+class NewsViewModel @Inject constructor(
     private val repository: NewsRepository
 ) : ViewModel() {
 
